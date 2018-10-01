@@ -106,14 +106,15 @@ def goals_conceded_till_matchweek(season_stats):
 	for i in range(2,39):
 		Cumu_conceded_till_matchweek[i] = Cumu_conceded_till_matchweek[i] + Cumu_conceded_till_matchweek[i-1]
 	return Cumu_conceded_till_matchweek
+	
 
 def apply_map(result):
-    if result == 'W':
-        return 3
-    elif result == 'D':
-        return 1
-    else:
-        return 0
+	if result == 'W':
+		return 3
+	elif result == 'D':
+		return 1
+	else:
+		return 0
 
 def team_result(season_stats):
 	teams =  create_team_dict(season_stats)
@@ -153,6 +154,7 @@ def update_sheet (season_stats):
 	ATGC = []
 	HTP = []
 	ATP = []
+	MW = []
 
 	for i in range(380):
 		HTGS.append(scored.loc[season_stats.iloc[i].HomeTeam][row])
@@ -161,6 +163,7 @@ def update_sheet (season_stats):
 		ATGC.append(conceded.loc[season_stats.iloc[i].AwayTeam][row])
 		HTP.append(points_so_far.loc[season_stats.iloc[i].HomeTeam][row])
 		ATP.append(points_so_far.loc[season_stats.iloc[i].AwayTeam][row])
+		MW.append(row)
 		if ( (i+1)%10 == 0 ):
 			row+=1
 
@@ -170,6 +173,7 @@ def update_sheet (season_stats):
 	season_stats['ATGC'] = ATGC
 	season_stats['HTP'] = HTP
 	season_stats['ATP'] = ATP
+	season_stats['MW'] = MW
 
 	return season_stats
 
@@ -205,30 +209,30 @@ def get_form(playing_stat,num):
 			j += 1           
 	return form_final
 
-def add_form(playing_stat,num):
-	form = get_form(playing_stat,num)
+def add_prev_match_results(playing_stat,num):
+	form = get_form(playing_stat,num)   # previous num watches of the team at ith matchweek
 	h = ['M' for i in range(num * 10)]  # since form is not available for n MW (n*10)
 	a = ['M' for i in range(num * 10)]
-	
+	#print(num)
+	#print(form)
 	j = num
 	for i in range((num*10),380):
 		ht = playing_stat.iloc[i].HomeTeam
 		at = playing_stat.iloc[i].AwayTeam
 
-		past = form.loc[ht][j]               # get past num results
-		h.append(past[num-1])                    #recent result
+		past = form.loc[ht][j]                   #get past num results
+		h.append(past[num-1])                    #numth recent result
 		
-		#print('past')
 		#print(past)
-		#print('past-N')
 		#print(past[num-1])
 
-		past = form.loc[at][j]               # get past n results.
-		a.append(past[num-1])                   # 0 index is most recent
+		past = form.loc[at][j]               # get past num results.
+		a.append(past[num-1])                # numth previous match
 		
 		if ((i + 1)% 10) == 0:
 			j = j + 1
 
+	#print(h)
 	playing_stat['HM' + str(num)] = h                 
 	playing_stat['AM' + str(num)] = a
 
@@ -237,32 +241,133 @@ def add_form(playing_stat,num):
 	return playing_stat
 
 
-def add_form_df(season_stats):
-	season_stats = add_form(season_stats,1)
-	season_stats = add_form(season_stats,2)
-	season_stats = add_form(season_stats,3)
-	season_stats = add_form(season_stats,4)
-	season_stats = add_form(season_stats,5)
+def add_prev_match_results_df(season_stats):
+	season_stats = add_prev_match_results(season_stats,1)
+	season_stats = add_prev_match_results(season_stats,2)
+	season_stats = add_prev_match_results(season_stats,3)
+	season_stats = add_prev_match_results(season_stats,4)
+	season_stats = add_prev_match_results(season_stats,5)
 	return season_stats  
 
-#print(add_form(season_data_01,3))
+#print(add_prev_match_results(season_data_01,3))
 
 
-season_data_01 = add_form_df(season_data_01)
-season_data_02 = add_form_df(season_data_02)
-season_data_03 = add_form_df(season_data_03)
-season_data_04 = add_form_df(season_data_04)
-season_data_05 = add_form_df(season_data_05)
-season_data_06 = add_form_df(season_data_06)
-season_data_07 = add_form_df(season_data_07)
-season_data_08 = add_form_df(season_data_08)
-season_data_09 = add_form_df(season_data_09)
-season_data_10 = add_form_df(season_data_10)
-season_data_11 = add_form_df(season_data_11)
-season_data_12 = add_form_df(season_data_12)
-season_data_13 = add_form_df(season_data_13)
-season_data_14 = add_form_df(season_data_14)
-season_data_15 = add_form_df(season_data_15)    
-season_data_16 = add_form_df(season_data_16)
+season_data_01 = add_prev_match_results_df(season_data_01)
+season_data_02 = add_prev_match_results_df(season_data_02)
+season_data_03 = add_prev_match_results_df(season_data_03)
+season_data_04 = add_prev_match_results_df(season_data_04)
+season_data_05 = add_prev_match_results_df(season_data_05)
+season_data_06 = add_prev_match_results_df(season_data_06)
+season_data_07 = add_prev_match_results_df(season_data_07)
+season_data_08 = add_prev_match_results_df(season_data_08)
+season_data_09 = add_prev_match_results_df(season_data_09)
+season_data_10 = add_prev_match_results_df(season_data_10)
+season_data_11 = add_prev_match_results_df(season_data_11)
+season_data_12 = add_prev_match_results_df(season_data_12)
+season_data_13 = add_prev_match_results_df(season_data_13)
+season_data_14 = add_prev_match_results_df(season_data_14)
+season_data_15 = add_prev_match_results_df(season_data_15)    
+season_data_16 = add_prev_match_results_df(season_data_16)
+season_data_17 = add_prev_match_results_df(season_data_17)    
+season_data_18 = add_prev_match_results_df(season_data_18)
+
+previous_years_standings = pd.read_csv('EPLStandings.csv')
+previous_years_standings.set_index(['Team'],inplace = True)
+previous_years_standings.fillna(20)
+
+def get_previous(season_stats,previous_years_standings,year):
+
+	HTLP = []
+	ATLP = []
+
+	for i in range(380):
+		HTLP.append(previous_years_standings.loc[season_stats.iloc[i].HomeTeam][year])
+		ATLP.append(previous_years_standings.loc[season_stats.iloc[i].AwayTeam][year])
+
+	season_stats['HTLP'] = HTLP
+	season_stats['ATLP'] = ATLP
+
+	return season_stats
+
+season_data_01 = get_previous(season_data_01,previous_years_standings,00)
+season_data_02 = get_previous(season_data_02,previous_years_standings,1)
+season_data_03 = get_previous(season_data_03,previous_years_standings,2)
+season_data_04 = get_previous(season_data_04,previous_years_standings,3)
+season_data_05 = get_previous(season_data_05,previous_years_standings,4)
+season_data_06 = get_previous(season_data_06,previous_years_standings,5)
+season_data_07 = get_previous(season_data_07,previous_years_standings,6)
+season_data_08 = get_previous(season_data_08,previous_years_standings,7)
+season_data_09 = get_previous(season_data_09,previous_years_standings,8)
+season_data_10 = get_previous(season_data_10,previous_years_standings,9)
+season_data_11 = get_previous(season_data_11,previous_years_standings,10)
+season_data_12 = get_previous(season_data_12,previous_years_standings,11)
+season_data_13 = get_previous(season_data_13,previous_years_standings,12)
+season_data_14 = get_previous(season_data_14,previous_years_standings,13)
+season_data_15 = get_previous(season_data_15,previous_years_standings,14)    
+season_data_16 = get_previous(season_data_16,previous_years_standings,15)
+#season_data_17 = get_previous(season_data_15,previous_years_standings,16)
+#season_data_18 = get_previous(season_data_16,previous_years_standings,17)
+
+def get_previous_17(season_data_16):
+	points_dict = create_team_dict(season_data_16)
+	rank_dict = create_team_dict(season_data_16)
+	for i in range(370,380):
+		points_dict[season_data_16.iloc[i].HomeTeam] = season_data_16.iloc[i].HTP
+		points_dict[season_data_16.iloc[i].AwayTeam] = season_data_16.iloc[i].ATP
+
+	sorted_dict = sorted( ((value, key) for (key,value) in points_dict.items()) , reverse = True)
+
+	for i in rank_dict.keys():
+		k=1
+		for j in points_dict.keys():
+			if j == i:
+				rank_dict[i] = k
+			else :
+				k+=1
+
+	HTLP = []
+	ATLP = []
+
+	for i in range(380):
+		HTLP.append(rank_dict[season_data_16.iloc[i].HomeTeam])
+		ATLP.append(rank_dict[season_data_16.iloc[i].AwayTeam])
+
+	season_data_16['HTLP'] = HTLP
+	season_data_16['ATLP'] = ATLP
+
+	return season_data_16
+
+def get_previous_18(season_data_17):
+	points_dict = create_team_dict(season_data_17)
+	rank_dict = create_team_dict(season_data_17)
+	for i in range(370,380):
+		points_dict[season_data_17.iloc[i].HomeTeam] = season_data_17.iloc[i].HTP
+		points_dict[season_data_17.iloc[i].AwayTeam] = season_data_17.iloc[i].ATP
+
+	sorted_dict = sorted( ((value, key) for (key,value) in points_dict.items()) , reverse = True)
+
+	for i in rank_dict.keys():
+		k=1
+		for j in points_dict.keys():
+			if j == i:
+				rank_dict[i] = k
+			else :
+				k+=1
+
+	HTLP = []
+	ATLP = []
+
+	for i in range(380):
+		HTLP.append(rank_dict[season_data_17.iloc[i].HomeTeam])
+		ATLP.append(rank_dict[season_data_17.iloc[i].AwayTeam])
+
+	season_data_17['HTLP'] = HTLP
+	season_data_17['ATLP'] = ATLP
+
+	return season_data_17
+
+season_data_17 = get_previous_17(season_data_16)
+season_data_18 = get_previous_18(season_data_17)
+
 
 	
