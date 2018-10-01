@@ -22,18 +22,19 @@ season_data_03 = pd.read_csv('E0(15).csv')
 season_data_02 = pd.read_csv('E0(16).csv')
 season_data_01 = pd.read_csv('E0(17).csv')
 
-def parse_date(date):  
-	if date == '':
-    	return None
-    else:
-    	return dt.strptime(date, '%d/%m/%y').date()
-    
+def parse_date(date):
+	#print(date,type(date))  
+	if date == '' or type(date) != str :
+		return None
+	else:
+		return dt.strptime((date), '%d/%m/%y').date()
+	
 
 def parse_date_other(date):
-    if date == '':
-        return None
-    else:
-        return dt.strptime(date, '%d/%m/%Y').date()
+	if date == '':
+		return None
+	else:
+		return dt.strptime((date), '%d/%m/%Y').date()
 
 season_data_01.Date = season_data_01.Date.apply(parse_date)    
 season_data_02.Date = season_data_02.Date.apply(parse_date)    
@@ -75,3 +76,77 @@ season_stats_16 = season_data_16[columns_req]
 season_stats_17 = season_data_17[columns_req]
 season_stats_18 = season_data_18[columns_req]
 
+def create_team_dict(season_stats):
+	teams = {}
+	for i in season_stats.groupby('HomeTeam').mean().T.columns:
+		teams[i] = []
+	return teams
+
+def goals_scored_till_matchweek(season_stats):
+	teams = create_team_dict(season_stats)
+	print(len(season_stats))
+	for i in range(len(season_stats)):
+		teams[season_stats.iloc[i].HomeTeam].append(season_stats.iloc[i].FTHG)
+		teams[season_stats.iloc[i].AwayTeam].append(season_stats.iloc[i].FTAG)
+
+	Cumu_scored_till_matchweek = pd.DataFrame(data = teams, index = [i for i in range(1,39)]).T
+	Cumu_scored_till_matchweek[0] = 0
+	for i in range(2,39):
+		Cumu_scored_till_matchweek[i] = Cumu_scored_till_matchweek[i] + Cumu_scored_till_matchweek[i-1]
+	return Cumu_scored_till_matchweek
+
+def goals_conceded_till_matchweek(season_stats):
+	teams = create_team_dict(season_stats)
+	for i in range(len(season_stats)):
+		teams[season_stats.iloc[i].HomeTeam].append(season_stats.iloc[i].FTAG)
+		teams[season_stats.iloc[i].AwayTeam].append(season_stats.iloc[i].FTHG)
+
+	Cumu_conceded_till_matchweek = pd.DataFrame(data = teams, index = [i for i in range(1,39)]).T
+	Cumu_conceded_till_matchweek[0] = 0
+	for i in range(2,39):
+		Cumu_conceded_till_matchweek[i] = Cumu_conceded_till_matchweek[i] + Cumu_conceded_till_matchweek[i-1]
+	return Cumu_conceded_till_matchweek
+
+def update_sheet (season_stats):
+	scored = goals_scored_till_matchweek(season_stats)
+	conceded = goals_conceded_till_matchweek(season_stats)
+	row = 0
+	HTGS = []
+	HTGC = []
+	ATGS = []
+	ATGC = []
+
+	for i in range(380):
+		HTGS.append(scored.loc[season_stats.iloc[i].HomeTeam][row])
+		HTGC.append(conceded.loc[season_stats.iloc[i].HomeTeam][row])
+		ATGS.append(scored.loc[season_stats.iloc[i].AwayTeam][row])
+		ATGC.append(conceded.loc[season_stats.iloc[i].AwayTeam][row])
+
+		if ( (i+1)%10 == 0 ):
+			row+=1
+
+	season_stats['HTGS'] = HTGS
+	season_stats['ATGS'] = ATGS
+	season_stats['HTGC'] = HTGC
+	season_stats['ATGC'] = ATGC
+
+	return season_stats
+
+season_data_18 = update_sheet(season_data_18)
+season_data_17 = update_sheet(season_data_17)
+season_data_16 = update_sheet(season_data_16)
+season_data_15 = update_sheet(season_data_15)
+season_data_14 = update_sheet(season_data_14)
+season_data_13 = update_sheet(season_data_13)
+season_data_12 = update_sheet(season_data_12)
+season_data_11 = update_sheet(season_data_11)
+season_data_10 = update_sheet(season_data_10)
+season_data_09 = update_sheet(season_data_09)
+season_data_08 = update_sheet(season_data_08)
+season_data_07 = update_sheet(season_data_07)
+season_data_06 = update_sheet(season_data_06)
+season_data_05 = update_sheet(season_data_05)
+season_data_04 = update_sheet(season_data_04)
+season_data_03 = update_sheet(season_data_03)
+season_data_02 = update_sheet(season_data_02)
+season_data_01 = update_sheet(season_data_01)
