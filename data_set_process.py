@@ -107,29 +107,38 @@ def goals_conceded_till_matchweek(season_stats):
 		Cumu_conceded_till_matchweek[i] = Cumu_conceded_till_matchweek[i] + Cumu_conceded_till_matchweek[i-1]
 	return Cumu_conceded_till_matchweek
 
+def apply_map(result):
+    if result == 'W':
+        return 3
+    elif result == 'D':
+        return 1
+    else:
+        return 0
+
 def team_result(season_stats):
 	teams =  create_team_dict(season_stats)
 	for i in range(len(season_stats)):
 		if season_stats.iloc[i].FTR == 'H':
-			teams[season_stats.iloc[i].HomeTeam].append(3)
-			teams[season_stats.iloc[i].AwayTeam].append(0)
+			teams[season_stats.iloc[i].HomeTeam].append('W')
+			teams[season_stats.iloc[i].AwayTeam].append('L')
 		elif season_stats.iloc[i].FTR == 'A':
-			teams[season_stats.iloc[i].HomeTeam].append(0)
-			teams[season_stats.iloc[i].AwayTeam].append(3)
+			teams[season_stats.iloc[i].HomeTeam].append('L')
+			teams[season_stats.iloc[i].AwayTeam].append('W')
 		else:
-			teams[season_stats.iloc[i].HomeTeam].append(1)
-			teams[season_stats.iloc[i].AwayTeam].append(1)
+			teams[season_stats.iloc[i].HomeTeam].append('D')
+			teams[season_stats.iloc[i].AwayTeam].append('D')
 
 	return pd.DataFrame(data = teams, index = [i for i in range(1,39)]).T
 
-def points_till_matchweek(season_point_stats):
+def points_till_matchweek(matchres):
+	matchres_points = matchres.applymap(apply_map)
 	for i in range(2,39):
-		season_point_stats[i] = season_point_stats[i] + season_point_stats[i-1]
-	print(season_point_stats)
-	season_point_stats.insert(column = 0, loc = 0, value = [0*i for i in range(20)])
-	print("new")
+		matchres_points[i] = matchres_points[i] + matchres_points[i-1]
 	#print(season_point_stats)
-	return season_point_stats
+	matchres_points.insert(column = 0, loc = 0, value = [0*i for i in range(20)])
+	#print("new")
+	#print(season_point_stats)
+	return matchres_points
 
 #print(points_till_matchweek(team_result(season_data_15)))
 
@@ -183,10 +192,77 @@ season_data_03 = update_sheet(season_data_03)
 season_data_02 = update_sheet(season_data_02)
 season_data_01 = update_sheet(season_data_01)
 
+def get_form(playing_stat,num):
+	form = team_result(playing_stat)
+	form_final = form.copy()
+	for i in range(num,39):
+		form_final[i] = ''
+		j = 0
+		while j < num:
+			#print(form[i])
+			#print(type(form[i]))
+			form_final[i] += form[i-j]
+			j += 1           
+	return form_final
+
+def add_form(playing_stat,num):
+	form = get_form(playing_stat,num)
+	h = ['M' for i in range(num * 10)]  # since form is not available for n MW (n*10)
+	a = ['M' for i in range(num * 10)]
+	
+	j = num
+	for i in range((num*10),380):
+		ht = playing_stat.iloc[i].HomeTeam
+		at = playing_stat.iloc[i].AwayTeam
+
+		past = form.loc[ht][j]               # get past num results
+		h.append(past[num-1])                    #recent result
+		
+		#print('past')
+		#print(past)
+		#print('past-N')
+		#print(past[num-1])
+
+		past = form.loc[at][j]               # get past n results.
+		a.append(past[num-1])                   # 0 index is most recent
+		
+		if ((i + 1)% 10) == 0:
+			j = j + 1
+
+	playing_stat['HM' + str(num)] = h                 
+	playing_stat['AM' + str(num)] = a
+
+	#print('new')
+	
+	return playing_stat
 
 
+def add_form_df(season_stats):
+	season_stats = add_form(season_stats,1)
+	season_stats = add_form(season_stats,2)
+	season_stats = add_form(season_stats,3)
+	season_stats = add_form(season_stats,4)
+	season_stats = add_form(season_stats,5)
+	return season_stats  
+
+#print(add_form(season_data_01,3))
 
 
-
+season_data_01 = add_form_df(season_data_01)
+season_data_02 = add_form_df(season_data_02)
+season_data_03 = add_form_df(season_data_03)
+season_data_04 = add_form_df(season_data_04)
+season_data_05 = add_form_df(season_data_05)
+season_data_06 = add_form_df(season_data_06)
+season_data_07 = add_form_df(season_data_07)
+season_data_08 = add_form_df(season_data_08)
+season_data_09 = add_form_df(season_data_09)
+season_data_10 = add_form_df(season_data_10)
+season_data_11 = add_form_df(season_data_11)
+season_data_12 = add_form_df(season_data_12)
+season_data_13 = add_form_df(season_data_13)
+season_data_14 = add_form_df(season_data_14)
+season_data_15 = add_form_df(season_data_15)    
+season_data_16 = add_form_df(season_data_16)
 
 	
