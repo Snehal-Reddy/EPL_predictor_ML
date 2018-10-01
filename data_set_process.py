@@ -370,4 +370,74 @@ season_data_17 = get_previous_17(season_data_16)
 season_data_18 = get_previous_18(season_data_17)
 
 
+
+
+concat_stat = pd.concat([season_data_01,season_data_02,season_data_03,season_data_04,season_data_05,season_data_06,season_data_07,season_data_08,season_data_09,season_data_10,season_data_11,season_data_12,season_data_13,season_data_14,season_data_15,season_data_17,season_data_18] ,ignore_index=True)
+
+def get_form_points(string):
+	sum = 0
+	for letter in string:
+		sum += apply_map(letter)
+	return sum
+
+concat_stat['HTFormStr'] = concat_stat['HM1'] + concat_stat['HM2'] + concat_stat['HM3'] + concat_stat['HM4'] + concat_stat['HM5']
+concat_stat['ATFormStr'] = concat_stat['AM1'] + concat_stat['AM2'] + concat_stat['AM3'] + concat_stat['AM4'] + concat_stat['AM5']
+
+concat_stat['HTFormPts'] = concat_stat['HTFormStr'].apply(get_form_points)
+concat_stat['ATFormPts'] = concat_stat['ATFormStr'].apply(get_form_points)
+
+# Identify Win/Loss Streaks if any.
+def get_3game_ws(string):
+	if string[-3:] == 'WWW':
+		return 1
+	else:
+		return 0
 	
+def get_5game_ws(string):
+	if string == 'WWWWW':
+		return 1
+	else:
+		return 0
+	
+def get_3game_ls(string):
+	if string[-3:] == 'LLL':
+		return 1
+	else:
+		return 0
+	
+def get_5game_ls(string):
+	if string == 'LLLLL':
+		return 1
+	else:
+		return 0
+	
+concat_stat['HTWinStreak3'] = concat_stat['HTFormStr'].apply(get_3game_ws)
+concat_stat['HTWinStreak5'] = concat_stat['HTFormStr'].apply(get_5game_ws)
+concat_stat['HTLossStreak3'] = concat_stat['HTFormStr'].apply(get_3game_ls)
+concat_stat['HTLossStreak5'] = concat_stat['HTFormStr'].apply(get_5game_ls)
+
+concat_stat['ATWinStreak3'] = concat_stat['ATFormStr'].apply(get_3game_ws)
+concat_stat['ATWinStreak5'] = concat_stat['ATFormStr'].apply(get_5game_ws)
+concat_stat['ATLossStreak3'] = concat_stat['ATFormStr'].apply(get_3game_ls)
+concat_stat['ATLossStreak5'] = concat_stat['ATFormStr'].apply(get_5game_ls)
+
+
+concat_stat['HTGD'] = concat_stat['HTGS'] - concat_stat['HTGC']
+concat_stat['ATGD'] = concat_stat['ATGS'] - concat_stat['ATGC']
+
+
+concat_stat['DiffPts'] = concat_stat['HTP'] - concat_stat['ATP']
+concat_stat['DiffFormPts'] = concat_stat['HTFormPts'] - concat_stat['ATFormPts']
+
+
+concat_stat['DiffLP'] = concat_stat['HTLP'] - concat_stat['ATLP']
+
+cols = ['HTGD','ATGD','DiffPts','DiffFormPts','HTP','ATP']
+concat_stat.MW = concat_stat.MW.astype(float)
+
+for col in cols:
+    concat_stat[col] = concat_stat[col] / concat_stat.MW
+
+
+concat_stat.to_csv("final_dataset.csv")
+
