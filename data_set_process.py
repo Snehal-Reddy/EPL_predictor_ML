@@ -84,7 +84,7 @@ def create_team_dict(season_stats):
 
 def goals_scored_till_matchweek(season_stats):
 	teams = create_team_dict(season_stats)
-	print(len(season_stats))
+	#print(len(season_stats))
 	for i in range(len(season_stats)):
 		teams[season_stats.iloc[i].HomeTeam].append(season_stats.iloc[i].FTHG)
 		teams[season_stats.iloc[i].AwayTeam].append(season_stats.iloc[i].FTAG)
@@ -107,21 +107,51 @@ def goals_conceded_till_matchweek(season_stats):
 		Cumu_conceded_till_matchweek[i] = Cumu_conceded_till_matchweek[i] + Cumu_conceded_till_matchweek[i-1]
 	return Cumu_conceded_till_matchweek
 
+def team_result(season_stats):
+	teams =  create_team_dict(season_stats)
+	for i in range(len(season_stats)):
+		if season_stats.iloc[i].FTR == 'H':
+			teams[season_stats.iloc[i].HomeTeam].append(3)
+			teams[season_stats.iloc[i].AwayTeam].append(0)
+		elif season_stats.iloc[i].FTR == 'A':
+			teams[season_stats.iloc[i].HomeTeam].append(0)
+			teams[season_stats.iloc[i].AwayTeam].append(3)
+		else:
+			teams[season_stats.iloc[i].HomeTeam].append(1)
+			teams[season_stats.iloc[i].AwayTeam].append(1)
+
+	return pd.DataFrame(data = teams, index = [i for i in range(1,39)]).T
+
+def points_till_matchweek(season_point_stats):
+	for i in range(2,39):
+		season_point_stats[i] = season_point_stats[i] + season_point_stats[i-1]
+	print(season_point_stats)
+	season_point_stats.insert(column = 0, loc = 0, value = [0*i for i in range(20)])
+	print("new")
+	#print(season_point_stats)
+	return season_point_stats
+
+#print(points_till_matchweek(team_result(season_data_15)))
+
 def update_sheet (season_stats):
 	scored = goals_scored_till_matchweek(season_stats)
 	conceded = goals_conceded_till_matchweek(season_stats)
+	points_so_far = points_till_matchweek(team_result(season_stats))
 	row = 0
 	HTGS = []
 	HTGC = []
 	ATGS = []
 	ATGC = []
+	HTP = []
+	ATP = []
 
 	for i in range(380):
 		HTGS.append(scored.loc[season_stats.iloc[i].HomeTeam][row])
 		HTGC.append(conceded.loc[season_stats.iloc[i].HomeTeam][row])
 		ATGS.append(scored.loc[season_stats.iloc[i].AwayTeam][row])
 		ATGC.append(conceded.loc[season_stats.iloc[i].AwayTeam][row])
-
+		HTP.append(points_so_far.loc[season_stats.iloc[i].HomeTeam][row])
+		ATP.append(points_so_far.loc[season_stats.iloc[i].AwayTeam][row])
 		if ( (i+1)%10 == 0 ):
 			row+=1
 
@@ -129,6 +159,8 @@ def update_sheet (season_stats):
 	season_stats['ATGS'] = ATGS
 	season_stats['HTGC'] = HTGC
 	season_stats['ATGC'] = ATGC
+	season_stats['HTP'] = HTP
+	season_stats['ATP'] = ATP
 
 	return season_stats
 
@@ -150,3 +182,11 @@ season_data_04 = update_sheet(season_data_04)
 season_data_03 = update_sheet(season_data_03)
 season_data_02 = update_sheet(season_data_02)
 season_data_01 = update_sheet(season_data_01)
+
+
+
+
+
+
+
+	
