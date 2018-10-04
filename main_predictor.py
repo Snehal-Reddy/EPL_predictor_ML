@@ -43,8 +43,7 @@ print f1, acc
 print "F1 score and accuracy score for training set: {:.4f} , {:.4f}.".format(f1 , acc)
 
 y_pred = clf.predict(X_test)
-    
-# Print the results of prediction for both training and testing
+
 f1 = f1_score(y_test, y_pred, pos_label='H')
 acc = sum(target == y_pred) / float(len(y_pred)
 print f1, acc
