@@ -1,0 +1,1 @@
+Implementation of Various Machine Learning models to predict the winner of Premier League matches and thus predict the champion of the Premier League. The dataset consists of match statistics from the season 2000/01 to 2017/18. 
