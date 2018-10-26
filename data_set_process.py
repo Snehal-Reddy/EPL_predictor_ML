@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import pandas as pd
 from datetime import datetime as dt
 import itertools
@@ -281,8 +282,15 @@ def get_previous(season_stats,previous_years_standings,year):
 	ATLP = []
 
 	for i in range(380):
-		HTLP.append(previous_years_standings.loc[season_stats.iloc[i].HomeTeam][year])
-		ATLP.append(previous_years_standings.loc[season_stats.iloc[i].AwayTeam][year])
+		if math.isnan(previous_years_standings.loc[season_stats.iloc[i].HomeTeam][year]):
+			HTLP.append(20)
+			#print(previous_years_standings.loc[season_stats.iloc[i].HomeTeam][year])
+		else:
+			HTLP.append(previous_years_standings.loc[season_stats.iloc[i].HomeTeam][year])
+		if math.isnan(previous_years_standings.loc[season_stats.iloc[i].AwayTeam][year]):
+			ATLP.append(20)
+		else:
+			ATLP.append(previous_years_standings.loc[season_stats.iloc[i].AwayTeam][year])
 
 	season_stats['HTLP'] = HTLP
 	season_stats['ATLP'] = ATLP
@@ -438,6 +446,24 @@ concat_stat.MW = concat_stat.MW.astype(float)
 for col in cols:
     concat_stat[col] = concat_stat[col] / concat_stat.MW
 
+#season_num = 1
+for season_num in range(17):
+	for i in range(12):
+		print (concat_stat.loc[i+380*season_num,'HTGD'])
+		if math.isnan(concat_stat.loc[i+380*season_num,'HTGD']):
+			concat_stat.loc[i+380*season_num,'HTGD'] = 0
+		if math.isnan(concat_stat.loc[i+380*season_num,'ATGD']):
+			concat_stat.loc[i+380*season_num,'ATGD'] = 0
+		if math.isnan(concat_stat.loc[i+380*season_num,'HTP']):
+			concat_stat.loc[i+380*season_num,'HTP'] = 0
+		if math.isnan(concat_stat.loc[i+380*season_num,'ATP']):
+			concat_stat.loc[i+380*season_num,'ATP'] = 0
 
+
+
+
+concat_stat.replace([np.inf, -np.inf], np.nan)
+concat_stat.fillna(concat_stat.mean())
+#concat_stat.replace([np.inf, -np.inf], np.).dropna(axis = 1, how = 'all')
 concat_stat.to_csv("final_dataset.csv")
 

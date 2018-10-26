@@ -37,14 +37,14 @@ SVC(random_state = 912, kernel='rbf').fit(X_train, y_train)
 y_pred = clf.predict(X_train)
     
 # Print the results of prediction for both training and testing
-f1 = f1_score(y_train, y_pred, pos_label='H')
-acc = sum(target == y_pred) / float(len(y_pred)
-print f1, acc
-print "F1 score and accuracy score for training set: {:.4f} , {:.4f}.".format(f1 , acc)
+#f1 = f1_score(y_train, y_pred, pos_label='H')
+#acc = sum(target == y_pred) / float(len(y_pred))
+#print(f1, acc)
+#print("F1 score and accuracy score for training set: {:.4f} , {:.4f}.".format(f1 , acc))
 
-y_pred = clf.predict(X_test)
+#y_pred = clf.predict(X_test)
 
-f1 = f1_score(y_test, y_pred, pos_label='H')
-acc = sum(target == y_pred) / float(len(y_pred)
-print f1, acc
-print "F1 score and accuracy score for training set: {:.4f} , {:.4f}.".format(f1 , acc)
+#f1 = f1_score(y_test, y_pred, pos_label='H')
+#acc = sum(target == y_pred) / float(len(y_pred)
+#print(f1, acc)
+#print("F1 score and accuracy score for training set: {:.4f} , {:.4f}.".format(f1 , acc))
