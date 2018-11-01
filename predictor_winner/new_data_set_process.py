@@ -6,24 +6,24 @@ import itertools
 
 number_of_teams = 0
 
-season_data_18 = pd.read_csv('E0.csv')
-season_data_17 = pd.read_csv('E0(1).csv')
-season_data_16 = pd.read_csv('E0(2).csv')
-season_data_15 = pd.read_csv('E0(3).csv')
-season_data_14 = pd.read_csv('E0(4).csv')
-season_data_13 = pd.read_csv('E0(5).csv')
-season_data_12 = pd.read_csv('E0(6).csv')
-season_data_11 = pd.read_csv('E0(7).csv')
-season_data_10 = pd.read_csv('E0(8).csv')
-season_data_09 = pd.read_csv('E0(9).csv')
-season_data_08 = pd.read_csv('E0(10).csv')
-season_data_07 = pd.read_csv('E0(11).csv')
-season_data_06 = pd.read_csv('E0(12).csv')
-season_data_05 = pd.read_csv('E0(13).csv')
-season_data_04 = pd.read_csv('E0(14).csv')
-season_data_03 = pd.read_csv('E0(15).csv')
-season_data_02 = pd.read_csv('E0(16).csv')
-season_data_01 = pd.read_csv('E0(17).csv')
+season_data_18 = pd.read_csv('data_season_wise/E0.csv')
+season_data_17 = pd.read_csv('data_season_wise/E0(1).csv')
+season_data_16 = pd.read_csv('data_season_wise/E0(2).csv')
+season_data_15 = pd.read_csv('data_season_wise/E0(3).csv')
+season_data_14 = pd.read_csv('data_season_wise/E0(4).csv')
+season_data_13 = pd.read_csv('data_season_wise/E0(5).csv')
+season_data_12 = pd.read_csv('data_season_wise/E0(6).csv')
+season_data_11 = pd.read_csv('data_season_wise/E0(7).csv')
+season_data_10 = pd.read_csv('data_season_wise/E0(8).csv')
+season_data_09 = pd.read_csv('data_season_wise/E0(9).csv')
+season_data_08 = pd.read_csv('data_season_wise/E0(10).csv')
+season_data_07 = pd.read_csv('data_season_wise/E0(11).csv')
+season_data_06 = pd.read_csv('data_season_wise/E0(12).csv')
+season_data_05 = pd.read_csv('data_season_wise/E0(13).csv')
+season_data_04 = pd.read_csv('data_season_wise/E0(14).csv')
+season_data_03 = pd.read_csv('data_season_wise/E0(15).csv')
+season_data_02 = pd.read_csv('data_season_wise/E0(16).csv')
+season_data_01 = pd.read_csv('data_season_wise/E0(17).csv')
 
 def parse_date(date):
 	#print(date,type(date))  
@@ -233,7 +233,7 @@ def add_prev_match_results_df(season_stats):
 
 concat_stat = add_prev_match_results_df(concat_stat)
 
-previous_years_standings = pd.read_csv('final_dataset.csv')
+previous_years_standings = pd.read_csv('data_season_wise/final_dataset.csv')
 
 def get_previous_year_standings (season_stats):
 	global previous_years_standings
