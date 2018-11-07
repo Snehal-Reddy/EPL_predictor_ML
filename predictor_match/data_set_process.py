@@ -380,7 +380,7 @@ season_data_18 = get_previous_18(season_data_17)
 
 
 
-concat_stat = pd.concat([season_data_01,season_data_02,season_data_03,season_data_04,season_data_05,season_data_06,season_data_07,season_data_08,season_data_09,season_data_10,season_data_11,season_data_12,season_data_13,season_data_14,season_data_15,season_data_17,season_data_18] ,ignore_index=True)
+concat_stat = pd.concat([season_data_01,season_data_02,season_data_03,season_data_04,season_data_05,season_data_06,season_data_07,season_data_08,season_data_09,season_data_10,season_data_11,season_data_12,season_data_13,season_data_14,season_data_15,season_data_16,season_data_17,season_data_18] ,ignore_index=True)
 
 def get_form_points(string):
 	sum = 0

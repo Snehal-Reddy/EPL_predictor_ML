@@ -233,19 +233,20 @@ def add_prev_match_results_df(season_stats):
 
 concat_stat = add_prev_match_results_df(concat_stat)
 
-previous_years_standings = pd.read_csv('../data_season_wise/final_dataset.csv')
+previous_years_standings = pd.read_csv('../predictor_match/final_dataset.csv')
 
 def get_previous_year_standings (season_stats):
 	global previous_years_standings
 	DiffLP = []
 	
-	for i in range(388*18):
-		DifLP.append(previous_years_standings.iloc[i].DiffLP)
+	for i in range(380*18):
+		DiffLP.append(previous_years_standings.iloc[i].DiffLP)
 
 	season_stats['DiffLP'] = DiffLP
 
 	return season_stats
 
+concat_stat = get_previous_year_standings(concat_stat)
 def get_form_points(string):
 	sum = 0
 	for letter in string:
