@@ -82,10 +82,10 @@ sorted_teams = sorted( ((value,key) for (key,value) in teams.items()), reverse =
 print sorted_teams
 
 
-plt.bar(range(len(sorted_teams)), list(sorted_teams.values()), align = 'center', width = 0.8)
-plt.xticks(range(len(sorted_teams)), list(sorted_teams.keys()))
-plt.xticks(rotation = 90)
-plt.show()
+# plt.bar(range(len(teams)), list(sorted_teams.values()), align = 'center', width = 0.8)
+# plt.xticks(range(len(teams)), list(sorted_teams.keys()))
+# plt.xticks(rotation = 90)
+# plt.show()
 
 
 # SVC(random_state = 912, kernel='rbf').fit(X_train, y_train)
