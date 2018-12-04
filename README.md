@@ -8,6 +8,6 @@ A predictor  which uses Machine Learning algorithms to predict the champion of E
 	<br>
 </h1>
 
-**Preditor mactch** - It predicts the winner of each match with the consideration that we have the present match stats with us . This is just a beginner level model for us to understand how the model is performing .
+**Predictor mactch** - It predicts the winner of each match with the consideration that we have the present match stats with us . This is just a beginner level model for us to understand how the model is performing .
 
 **Predictor Winner** - This the the main predictor , which predicts the winner of the current season without the present season stats.
