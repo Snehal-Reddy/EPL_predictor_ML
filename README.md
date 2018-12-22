@@ -13,4 +13,7 @@ A predictor  which uses Machine Learning algorithms to predict the champion of E
 **Predictor Winner** - This the the main predictor , which predicts the winner of the current season without the present season stats.
 
 Here's our prediction of the final League table of the Premier League Season 2017/18.
+
 ![alt text](https://github.com/Snehal-Reddy/EPL_predictor_ML/blob/master/data_season_wise/League.png)
+
+The accuracy of our model is justified by the fact that it predicts that Arsenal finished fourth!! :P
