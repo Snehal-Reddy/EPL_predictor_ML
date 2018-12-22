@@ -11,6 +11,7 @@ import xgboost as xgb
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import make_scorer
 from sklearn.metrics import f1_score
+from prettytable import PrettyTable
 
 data = pd.read_csv('new_final_dataset.csv')
 
@@ -47,19 +48,22 @@ x_train = X_all.loc[0:6459,:]
 y_train = y_all[0:6460]
 x_test = X_all.loc[6460:6840,:]
 y_test = y_all[6460:6840]
-# forest_clf = RandomForestClassifier(n_estimators = 100, max_depth = 10, random_state = 0)
-# forest_clf.fit(x_train, y_train)
-# Y_out = forest_clf.predict(x_test)
+forest_clf = RandomForestClassifier(n_estimators = 100, max_depth = 3, random_state = 1)
+forest_clf.fit(x_train, y_train)
+Y_out = forest_clf.predict(x_test)
 
-clf = xgb.XGBClassifier(seed = 82)
-parameters = {'learning_rate':[0.1], 'n_estimators':[40],'max_depth':[3],'min_child_weight':[3], 'gamma':[0.4],'subsample':[0.8], 'colsample_bytree':[0.8], 'scale_pos_weight' : [1], 'reg_alpha' : [1e-5]}
-f1_scorer = make_scorer(f1_score,pos_label='H', average = 'weighted') 
+# clf = xgb.XGBClassifier(seed = 82)
+# parameters = {'learning_rate':[0.1], 'n_estimators':[40],'max_depth':[3],'min_child_weight':[3], 'gamma':[0.4],'subsample':[0.8], 'colsample_bytree':[0.8], 'scale_pos_weight' : [1], 'reg_alpha' : [1e-5]}
+# f1_scorer = make_scorer(f1_score,pos_label='H', average = 'weighted') 
 
-grid_obj = GridSearchCV(clf, scoring = f1_scorer, param_grid = parameters, cv = 5)
-grid_obj = grid_obj.fit(x_train, y_train)
-clf = grid_obj.best_estimator_
-clf.fit(x_train, y_train)
-Y_out = clf.predict(x_test)
+# grid_obj = GridSearchCV(clf, scoring = f1_scorer, param_grid = parameters, cv = 5)
+# grid_obj = grid_obj.fit(x_train, y_train)
+# clf = grid_obj.best_estimator_
+# clf.fit(x_train, y_train)
+# Y_out = clf.predict(x_test)
+
+for i in range(100):
+	print(Y_out[i])
 
 
 correct_pred = 0
@@ -82,8 +86,13 @@ sorted_teams = sorted( ((value,key) for (key,value) in teams.items()), reverse =
 print sorted_teams
 
 
-# plt.bar(range(len(teams)), list(sorted_teams.values()), align = 'center', width = 0.8)
-# plt.xticks(range(len(teams)), list(sorted_teams.keys()))
+x = PrettyTable()
+x.field_names = ["Rank", "Club", "Points"]
+for i in range(len(teams)):
+	x.add_row([i+1,sorted_teams[i][1], sorted_teams[i][0]])
+print(x)
+# plt.bar(range(len(teams)), list(teams.values()), align = 'center', width = 0.8)
+# plt.xticks(range(len(teams)), list(teams.keys()))
 # plt.xticks(rotation = 90)
 # plt.show()
 
