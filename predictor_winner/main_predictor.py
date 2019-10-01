@@ -113,3 +113,14 @@ print(x)
 #acc = sum(target == y_pred) / float(len(y_pred)
 #print(f1, acc)
 #print("F1 score and accuracy score for training set: {:.4f} , {:.4f}.".format(f1 , acc))
+def partition(arr,low,high): 
+    	i = ( low-1 ) 
+    	pivot = arr[high]   
+  
+    	for j in range(low , high): 
+        	if   arr[j] <= pivot:  
+            		i = i+1 
+            		arr[i],arr[j] = arr[j],arr[i] 
+  
+    	arr[i+1],arr[high] = arr[high],arr[i+1] 
+    	return ( i+1 ) 
